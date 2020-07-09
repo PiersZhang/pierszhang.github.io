@@ -79,11 +79,14 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Piers Zhang">
-<meta property="og:url" content="https:&#x2F;&#x2F;pierszhang.github.io&#x2F;index.html">
+<meta name="description" content="如题，Vue是一个js框架，MobX则是React进行状态管理的一个库，两者看起来并没有什么关联，但是由于都使用了Object.defineProperty，使得两者在数据绑定操作上不禁有些相似 由于Vue3.X已经用Proxy重写了他的数据绑定机制，所以顺带了解一下Proxy###本文介绍了什么  Object.defineProperty与Proxy的使用 Object.definePrope">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue2.X和MobX中的Object.defineProperty，并与Proxy的对比">
+<meta property="og:url" content="https:&#x2F;&#x2F;pierszhang.github.io&#x2F;2020&#x2F;07&#x2F;09&#x2F;Vue2-X%E5%92%8CMobX%E4%B8%AD%E7%9A%84Object-defineProperty%EF%BC%8C%E5%B9%B6%E4%B8%8EProxy%E7%9A%84%E5%AF%B9%E6%AF%94&#x2F;index.html">
 <meta property="og:site_name" content="Piers Zhang">
+<meta property="og:description" content="如题，Vue是一个js框架，MobX则是React进行状态管理的一个库，两者看起来并没有什么关联，但是由于都使用了Object.defineProperty，使得两者在数据绑定操作上不禁有些相似 由于Vue3.X已经用Proxy重写了他的数据绑定机制，所以顺带了解一下Proxy###本文介绍了什么  Object.defineProperty与Proxy的使用 Object.definePrope">
 <meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-07-09T09:48:21.990Z">
 <meta name="twitter:card" content="summary">
 
 
@@ -114,13 +117,13 @@
 
 
 
-  <link rel="canonical" href="https://pierszhang.github.io/"/>
+  <link rel="canonical" href="https://pierszhang.github.io/2020/07/09/Vue2-X和MobX中的Object-defineProperty，并与Proxy的对比/"/>
 
 
 
 
 
-  <title>Piers Zhang</title>
+  <title>Vue2.X和MobX中的Object.defineProperty，并与Proxy的对比 | Piers Zhang</title>
   
 
 
@@ -139,8 +142,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -213,9 +215,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -245,9 +247,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/09/Vue2-X%E5%92%8CMobX%E4%B8%AD%E7%9A%84Object-defineProperty%EF%BC%8C%E5%B9%B6%E4%B8%8EProxy%E7%9A%84%E5%AF%B9%E6%AF%94/" itemprop="url">Vue2.X和MobX中的Object.defineProperty，并与Proxy的对比</a></h1>
+          <h1 class="post-title" itemprop="name headline">Vue2.X和MobX中的Object.defineProperty，并与Proxy的对比</h1>
         
 
         <div class="post-meta">
@@ -297,9 +297,7 @@
       
 
       
-        
-          
-            <p>如题，Vue是一个js框架，MobX则是React进行状态管理的一个库，两者看起来并没有什么关联，但是由于都使用了Object.defineProperty，使得两者在数据绑定操作上不禁有些相似</p>
+        <p>如题，Vue是一个js框架，MobX则是React进行状态管理的一个库，两者看起来并没有什么关联，但是由于都使用了Object.defineProperty，使得两者在数据绑定操作上不禁有些相似</p>
 <p>由于Vue3.X已经用Proxy重写了他的数据绑定机制，所以顺带了解一下Proxy<br>###本文介绍了什么</p>
 <ul>
 <li>Object.defineProperty与Proxy的使用</li>
@@ -344,8 +342,6 @@
 <li>Object.defineProperty在Vue和MobX中造成的问题和解决办法<br>1、Vue通过重写数据的七个方法，MobX通过提前将类数组声明为长度999，避免无法监听数组长度的问题<br>2、Vue和MobX都是用遍历的方式来监听深层对象属性和新增的属性</li>
 </ul>
 
-          
-        
       
     </div>
     
@@ -362,131 +358,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://pierszhang.github.io/2019/12/02/Git-Flow%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Piers Zhang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Piers Zhang">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/12/02/Git-Flow%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83/" itemprop="url">Git Flow使用规范</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-02T17:10:25+08:00">
-                2019-12-02
-              </time>
+              <a href="/2019/12/02/Git-Flow%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83/" rel="next" title="Git Flow使用规范">
+                <i class="fa fa-chevron-left"></i> Git Flow使用规范
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -496,189 +389,11 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://pierszhang.github.io/2019/06/13/%E4%BA%94%E5%88%86%E9%92%9F%E5%AD%A6%E4%BC%9A%E7%94%A8Charles%E6%8A%93%E5%8C%85/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Piers Zhang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Piers Zhang">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/06/13/%E4%BA%94%E5%88%86%E9%92%9F%E5%AD%A6%E4%BC%9A%E7%94%A8Charles%E6%8A%93%E5%8C%85/" itemprop="url">五分钟学会用Charles抓包</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-06-13T11:41:10+08:00">
-                2019-06-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index">
-                    <span itemprop="name">前端</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="Charles介绍"><a href="#Charles介绍" class="headerlink" title="Charles介绍"></a>Charles介绍</h3><p>Charles可能很多人不熟悉!，但是另外一个windows下的Fiddler很多人应该不陌生的；它们都是同性质的代理抓包工具；</p>
-<p>正常情况下，Chrome DevTool已经满足了日常web开发的需求，但是有的特性：编辑request的参数、重定向request请求的资源、编辑response的数据，ChromeDevTool就很蛋疼了，而且查看和调试移动端资源时候Chrome也并不好用；</p>
-<h4 id="我常借用Charles做这些事情-："><a href="#我常借用Charles做这些事情-：" class="headerlink" title="我常借用Charles做这些事情 ："></a>我常借用Charles做这些事情 ：</h4><ul>
-<li>抓取 Http 和 Https 的请求和响应，抓包是最常用的了。</li>
-<li>重发网络请求，方便后端调试，复杂和特殊情况下的一件重发还是非常爽的（捕获的记录，直接repeat就可以了，如果想修改还可以修改）。</li>
-<li>修改网络请求参数（客户端向服务器发送的时候，可以修改后再转发出去）。<br>网络请求的截获和动态修改。</li>
-<li>支持模拟慢速网络，主要是模仿手机上的2G/3G/4G的访问流程。</li>
-<li>支持本地映射和远程映射，比如你可以把线上资源映射到本地某个文件夹下，这样可以方便的处理一些特殊情况下的bug和线上调试（网络的css，js等资源用的是本地代码，这些你可以本地随便修改，数据之类的都是线上的环境，方面在线调试）；</li>
-<li>可以抓手机端访问的资源（如果是配置HOST的环境，手机可以借用host配置进入测试环境）</li>
-</ul>
-<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><ul>
-<li><a href="https://www.charlesproxy.com/download/" target="_blank" rel="noopener">下载</a></li>
-<li>安装后长这样<br><img src="/img/4539636-180696d9002e8d67.png" alt=""></li>
-</ul>
-<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><ul>
-<li><p>手机和电脑连上同一个局域网</p>
-</li>
-<li><p>打开Charles客户端，点击Proxy-&gt;Proxy Settings菜单，设置默认端口8888<br><img src="/img/4539636-f6d1bfc18138748e.png" alt=""></p>
-</li>
-<li><p>打开Charles客户端，点击Help-&gt;Local Ip Address，查看本机IP<br><img src="/img/4539636-2f53aed0bec5c1eb.png" alt=""></p>
-</li>
-<li><p>打开手机局域网设置，点击代理，设置为你本机IP和上面默认的8888端口<br><img src="/img/4539636-42f4fc8dec2116af.png" alt="这里的服务器地址应该是192.168.20.111,图片上的写错了"></p>
-</li>
-<li><p>打开Charles客户端，点击Poxy-&gt;macOs Proxy</p>
-</li>
-<li><p>等待一会，Charles会弹出是否允许，点击allow<br><img src="/img/4539636-792cc727406daa23.png" alt=""></p>
-</li>
-<li><p>Charles就会抓到你手机上的请求地址<br><img src="/img/4539636-1adae9720654edb8.png" alt=""></p>
-</li>
-</ul>
-<h4 id="https请求是unknow问题"><a href="#https请求是unknow问题" class="headerlink" title="https请求是unknow问题"></a>https请求是unknow问题</h4><ul>
-<li><p>抓到包后会发现有些请求是unknow，看不到具体的请求，原因是你的手机没有安装ssl证书、并且电脑需要配置代理网址<br><img src="/img/4539636-dfc9a57d312a7be3.png" alt=""></p>
-</li>
-<li><p>解决方法：<br>1、打开Charles, 点击Help-&gt;SSL Proxying-&gt;Install Charles Root Certificate，安装后去钥匙串中允许Charles的证书始终信任<br><img src="/img/4539636-ccd631cb9b81eb52.png" alt=""></p>
-<p>2、 手机浏览器输入<a href="http://chls.pro/ssl" target="_blank" rel="noopener">chls.pro/ssl</a>安装证书（通用-&gt;描述文文件与设备管理-&gt;选中Charles证书安装），安装好之后要设置信任该证书（通用-&gt;关于本机-&gt;设置信任该证书）,不然抓包仍然会显示unknown类型。</p>
-<p>3、在Charles中，设置Proxy-&gt;SSL Proxying Settings中的SSL Proxying的代理  网址。直接点击Add-&gt;OK即可，不用输入host和port，就可以默认代理所有请求<br><img src="/img/4539636-6a8eaa512c58ba46.png" alt=""></p>
-</li>
-</ul>
-
-          
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -686,6 +401,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -706,8 +425,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -767,6 +495,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Object-defineProperty与Proxy的使用"><span class="nav-number">1.</span> <span class="nav-text">Object.defineProperty与Proxy的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Object-defineProperty-Object-defineProperty-MDN"><span class="nav-number">1.0.1.</span> <span class="nav-text">Object.defineProperty Object.defineProperty - MDN</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Proxy-Proxy-MDN"><span class="nav-number">1.0.2.</span> <span class="nav-text">Proxy Proxy - MDN</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Object-defineProperty与Proxy的缺点"><span class="nav-number">2.</span> <span class="nav-text">Object.defineProperty与Proxy的缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Object-defineProperty的缺点"><span class="nav-number">2.0.1.</span> <span class="nav-text">Object.defineProperty的缺点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Proxy的缺点"><span class="nav-number">2.0.2.</span> <span class="nav-text">Proxy的缺点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#小结"><span class="nav-number">2.0.3.</span> <span class="nav-text">小结</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#2、需要对对象的深层属性或者新增属性进行遍历，达到监听的目的"><span class="nav-number">2.0.3.1.</span> <span class="nav-text">2、需要对对象的深层属性或者新增属性进行遍历，达到监听的目的</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -900,6 +644,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
