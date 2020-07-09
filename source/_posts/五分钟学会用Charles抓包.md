@@ -9,7 +9,7 @@ categories:
 - 前端
 ---
 ### Charles介绍
-Charles可能很多人不熟悉，但是另外一个windows下的Fiddler很多人应该不陌生的；它们都是同性质的代理抓包工具；
+Charles可能很多人不熟悉!，但是另外一个windows下的Fiddler很多人应该不陌生的；它们都是同性质的代理抓包工具；
 
 正常情况下，Chrome DevTool已经满足了日常web开发的需求，但是有的特性：编辑request的参数、重定向request请求的资源、编辑response的数据，ChromeDevTool就很蛋疼了，而且查看和调试移动端资源时候Chrome也并不好用；
 
