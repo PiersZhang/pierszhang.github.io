@@ -1,7 +1,7 @@
 <!--
  * @Author: Piers.Zhang
  * @Date: 2020-07-10 11:37:14
- * @LastEditTime: 2020-07-10 14:29:47
+ * @LastEditTime: 2020-07-10 17:32:34
  * @LastEditors: Do not edit
 --> 
 `hexo clean`: 清除静态资源文件
@@ -18,3 +18,6 @@ hexo分支用户编写原始文件
 在项目的_config.yml文件中将hexo d部署分支对应远端的master分支，即将构建出来的讲台文件推送到远端master分支用户显示gitIO静态博客
 
 hexo分支不提交静态文件
+
+###FAQ
+本地主题不加载：尝试进入themes/next文件下重新npm isntall
