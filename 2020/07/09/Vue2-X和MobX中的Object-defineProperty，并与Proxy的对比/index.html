@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="如题，Vue是一个js框架，MobX则是React进行状态管理的一个库，两者看起来并没有什么关联，但是由于都使用了Object.defineProperty，使得两者在数据绑定操作上不禁有些相似 由于Vue3.X已经用Proxy重写了他的数据绑定机制，所以顺带了解一下Proxy 本文介绍了什么 Object.defineProperty与Proxy的使用 Object.defineProperty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue2.X和MobX中的Object.defineProperty，并与Proxy的对比">
+<meta property="og:url" content="https://pierszhang.github.io/2020/07/09/Vue2-X%E5%92%8CMobX%E4%B8%AD%E7%9A%84Object-defineProperty%EF%BC%8C%E5%B9%B6%E4%B8%8EProxy%E7%9A%84%E5%AF%B9%E6%AF%94/index.html">
+<meta property="og:site_name" content="Piers Zhang">
+<meta property="og:description" content="如题，Vue是一个js框架，MobX则是React进行状态管理的一个库，两者看起来并没有什么关联，但是由于都使用了Object.defineProperty，使得两者在数据绑定操作上不禁有些相似 由于Vue3.X已经用Proxy重写了他的数据绑定机制，所以顺带了解一下Proxy 本文介绍了什么 Object.defineProperty与Proxy的使用 Object.defineProperty">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-07-09T09:47:48.000Z">
+<meta property="article:modified_time" content="2021-07-16T04:58:32.216Z">
+<meta property="article:author" content="Piers Zhang">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://pierszhang.github.io/2020/07/09/Vue2-X和MobX中的Object-defineProperty，并与Proxy的对比/"/>
+
+
+
+
+
+  <title>Vue2.X和MobX中的Object.defineProperty，并与Proxy的对比 | Piers Zhang</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <a href="https://github.com/pierszhang" target="_blank" rel="noopener" class="github-corner" aria-label="View source on GitHub"><svg width="100" height="100" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Piers Zhang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-首页">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-分类">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://pierszhang.github.io/2020/07/09/Vue2-X%E5%92%8CMobX%E4%B8%AD%E7%9A%84Object-defineProperty%EF%BC%8C%E5%B9%B6%E4%B8%8EProxy%E7%9A%84%E5%AF%B9%E6%AF%94/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Piers Zhang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Piers Zhang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vue2.X和MobX中的Object.defineProperty，并与Proxy的对比</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-09T17:47:48+08:00">
+                2020-07-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">web前端</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+          
+            <span class="post-meta-divider">|</span>
+            <span id="busuanzi_value_page_pv"></span>次阅读
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>如题，Vue是一个js框架，MobX则是React进行状态管理的一个库，两者看起来并没有什么关联，但是由于都使用了Object.defineProperty，使得两者在数据绑定操作上不禁有些相似</p>
+<p>由于Vue3.X已经用Proxy重写了他的数据绑定机制，所以顺带了解一下Proxy</p>
+<h1 id="本文介绍了什么"><a href="#本文介绍了什么" class="headerlink" title="本文介绍了什么"></a>本文介绍了什么</h1><ul>
+<li>Object.defineProperty与Proxy的使用</li>
+<li>Object.defineProperty与Proxy的缺点 </li>
+<li>Object.defineProperty在Vue和MobX中造成的问题和解决办法</li>
+</ul>
+<h1 id="Object-defineProperty与Proxy的使用"><a href="#Object-defineProperty与Proxy的使用" class="headerlink" title="Object.defineProperty与Proxy的使用"></a>Object.defineProperty与Proxy的使用</h1><h2 id="Object-defineProperty"><a href="#Object-defineProperty" class="headerlink" title="Object.defineProperty"></a>Object.defineProperty</h2><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty" target="_blank" rel="noopener">Object.defineProperty - MDN</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* obj : 要定义属性的对象</span></span><br><span class="line"><span class="comment">* prop : 要定义或修改的属性的名称或 [`Symbol`]</span></span><br><span class="line"><span class="comment">* descriptor : 要定义或修改的属性描述符</span></span><br><span class="line"><span class="comment">*    value： 该属性对应的值</span></span><br><span class="line"><span class="comment">*    writable</span></span><br><span class="line"><span class="comment">*    enumerable</span></span><br><span class="line"><span class="comment">*    configurable</span></span><br><span class="line"><span class="comment">*    get</span></span><br><span class="line"><span class="comment">*    set</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">var</span> o = &#123;&#125;;</span><br><span class="line"><span class="built_in">Object</span>.defineProperty(o, <span class="string">"a"</span>, &#123;</span><br><span class="line">value : <span class="number">37</span>,</span><br><span class="line">writable : <span class="literal">true</span>,</span><br><span class="line">enumerable : <span class="literal">true</span>,</span><br><span class="line">configurable : <span class="literal">true</span>,</span><br><span class="line"><span class="keyword">get</span>: function () &#123;&#125;,</span><br><span class="line"><span class="keyword">set</span>: function () &#123;&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>在 descriptor 中不能 同时设置访问器 (get 和 set) 和 wriable 或 value，否则会错，就是说想用(get 和 set)，就不能用（wriable 或 value中的任何一个）</p>
+<h2 id="Proxy"><a href="#Proxy" class="headerlink" title="Proxy"></a>Proxy</h2><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy" target="_blank" rel="noopener">Proxy - MDN</a><br><a href="https://es6.ruanyifeng.com/#docs/proxy" target="_blank" rel="noopener">es6 Proxy - 阮一峰</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(&#123;&#125;, &#123;</span><br><span class="line"><span class="keyword">get</span>: function(target, key, receiver) &#123;</span><br><span class="line">	<span class="keyword">return</span> receiver;</span><br><span class="line">&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> d = <span class="built_in">Object</span>.create(proxy);</span><br><span class="line">d.a === d <span class="comment">// true</span></span><br><span class="line"><span class="comment">//d对象本身没有a属性，所以读取d.a的时候，会去d的原型proxy对象找。</span></span><br><span class="line"><span class="comment">//这时，receiver就指向d，代表原始的读操作所在的那个对象</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>get和set方法中的receiver参数参考<a href="https://github.com/ruanyf/es6tutorial/issues/669" target="_blank" rel="noopener">Proxy get中的receiver问题</a></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>Object.defineProperty是直接对原始对象进行操作并返回，Proxy是进行一个类似多例的操作，不会影响原始对象</li>
+<li>Object.defineProperty的属性较少，Proxy对数据劫持对handler方法较多，但两者都有最基础的get和set</li>
+</ul>
+<h1 id="Object-defineProperty与Proxy的缺点"><a href="#Object-defineProperty与Proxy的缺点" class="headerlink" title="Object.defineProperty与Proxy的缺点"></a>Object.defineProperty与Proxy的缺点</h1><h2 id="Object-defineProperty的缺点"><a href="#Object-defineProperty的缺点" class="headerlink" title="Object.defineProperty的缺点"></a>Object.defineProperty的缺点</h2><p>因为defineProperty的属性限制，导致了三个问题<br>1、无法监听到数组的长度变化<br>2、由于只能劫持对象的属性，对于复杂对象需要对每个属性进行深度遍历<br>3、由于只能劫持对象的属性，对象属性有新增时，需要将对象的所有属性都进行遍历进行监听<br><a href="https://juejin.im/post/5b0d0212f265da08da29e50f" target="_blank" rel="noopener">为什么defineProperty不能检测到数组长度的“变化”</a></p>
+<p>数组的length属性被初始化为如下<br>configurable为false也就是说length属性不能修改，不能删除，所以想我们想要通过get/set方法来监听length属性是不可行的</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">writable: <span class="literal">true</span>,</span><br><span class="line">enumerable: <span class="literal">false</span>,</span><br><span class="line">configurable: <span class="literal">false</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>验证对象新增的属性在definproperty中能否被监听</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = <span class="built_in">Object</span>.defineProperty(&#123;<span class="attr">age</span>: <span class="number">20</span>&#125;, <span class="string">'name'</span>, &#123;</span><br><span class="line">    <span class="keyword">get</span>: function() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'get!!!'</span>);</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="keyword">set</span>: function(newName) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'set!!!'</span>);</span><br><span class="line">        name = newName;</span><br><span class="line">    &#125;,</span><br><span class="line">    enumerable: <span class="literal">true</span>,</span><br><span class="line">    configurable: <span class="literal">true</span></span><br><span class="line">&#125;);</span><br><span class="line">person.name; <span class="comment">// 'get!!!'  'piers'</span></span><br><span class="line">person.name = <span class="string">'zhangpeng'</span> <span class="comment">// 'set!!!'  'zhangpeng'</span></span><br><span class="line">person.age; <span class="comment">//   'piers' 此时不会被get监听</span></span><br><span class="line">person.age = <span class="string">'30'</span>; <span class="comment">// '30' 此时不会被set监听</span></span><br></pre></td></tr></table></figure>
+<h2 id="Proxy的缺点"><a href="#Proxy的缺点" class="headerlink" title="Proxy的缺点"></a>Proxy的缺点</h2><ul>
+<li>由于是es6的特性，所以存在浏览器兼容性问题</li>
+</ul>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><ul>
+<li>Object.defineProperty有三个缺点<br>1、无法监听到数组的长度变化<br>2、由于只能劫持对象的属性，对于复杂对象需要对每个属性进行深度遍历<br>3、由于只能劫持对象的属性，对象属性有新增时，需要将对象的所有属性都进行遍历进行监听</li>
+<li>Proxy有一个缺点<br>1、存在浏览器兼容性问题</li>
+</ul>
+<h1 id="Object-defineProperty在Vue和MobX中造成的问题"><a href="#Object-defineProperty在Vue和MobX中造成的问题" class="headerlink" title="Object.defineProperty在Vue和MobX中造成的问题"></a>Object.defineProperty在Vue和MobX中造成的问题</h1><p>由于Object.defineProperty的三个缺点，在Vue中有如下问题</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在Vue中这种数组操作和对象操作，不会被Vue监听到</span></span><br><span class="line"><span class="keyword">let</span> vm1 = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">data: &#123;</span><br><span class="line">	list: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">&#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">let</span> vm2 = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">data: &#123;</span><br><span class="line">	a: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;)</span><br><span class="line">vm1.list[index] = newValue <span class="comment">// 非响应式的</span></span><br><span class="line">vm1.list.length = newLength  <span class="comment">// 非响应式的</span></span><br><span class="line">vm2.a = <span class="number">2</span> <span class="comment">// `vm.a` 是响应式的</span></span><br><span class="line">vm2.b = <span class="number">2</span> <span class="comment">// `vm.b` 是非响应式的</span></span><br></pre></td></tr></table></figure>
+<p>对于Object.defineProperty的三个缺点，我们来看Vue和MobX是如何进行处理的</p>
+<h2 id="无法监听数组长度属性变化的问题"><a href="#无法监听数组长度属性变化的问题" class="headerlink" title="无法监听数组长度属性变化的问题"></a>无法监听数组长度属性变化的问题</h2><ul>
+<li>Vue重写了push、pop、shift、unshift、splice、sort、reverse这七个数组方法，是的这些方法可以响应式，参考<a href="https://cn.vuejs.org/v2/guide/list.html#%E6%95%B0%E7%BB%84%E6%9B%B4%E6%96%B0%E6%A3%80%E6%B5%8B" target="_blank" rel="noopener">Vue文档说明</a></li>
+<li>MobX则是会在定义的时候，默认把类数组长度预留999个单位<br>这样其实不会对性能有损耗，因为js中对数据的遍历除了for循环还有forEach、map、filter、some等，除了for循环外(for,for…of)，其他的遍历都是对键值的遍历<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [<span class="number">1</span>];</span><br><span class="line">arr[<span class="number">1000</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"><span class="built_in">console</span>.time();</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">	<span class="built_in">console</span>.log(arr[i]);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">b</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"><span class="built_in">console</span>.time();</span><br><span class="line">arr.forEach(<span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</span><br><span class="line">	<span class="built_in">console</span>.log(item);</span><br><span class="line">&#125;)</span><br><span class="line">&#125;</span><br><span class="line">a(); <span class="comment">//default: 567.1669921875ms</span></span><br><span class="line">b(); <span class="comment">//default: 0.81982421875ms</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="需要对对象的深层属性或者新增属性进行遍历，达到监听的目的"><a href="#需要对对象的深层属性或者新增属性进行遍历，达到监听的目的" class="headerlink" title="需要对对象的深层属性或者新增属性进行遍历，达到监听的目的"></a>需要对对象的深层属性或者新增属性进行遍历，达到监听的目的</h2><ul>
+<li>Vue提供了<a href="https://cn.vuejs.org/v2/guide/reactivity.html#%E6%A3%80%E6%B5%8B%E5%8F%98%E5%8C%96%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9" target="_blank" rel="noopener">Vue.set(object, propertyName, value)</a>方法向嵌套对象添加响应式property<br>或者用<a href="https://cn.vuejs.org/v2/api/#vm-options" target="_blank" rel="noopener">watch的deep参数</a>监听对象上深层属性的变化</li>
+<li>MobX一样，需要遍历对象的所有属性进行修改属性，只不过MobX没有帮你去做这个深层遍历，而是需要你在使用MobX的@observable的时候提前将需要双向绑定的数据提前定义出来，或者强制将对象强制更新<a href="https://github.com/ckinmind/ReactCollect/issues/97" target="_blank" rel="noopener">关于在MobX中如何observe观察深层的数据变动</a></li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li>Object.defineProperty与Proxy的使用上的区别<br>1、Object.defineProperty是直接对原始对象进行操作并返回，Proxy是进行一个类似多例的操作，不会影响原始对象<br>2、Object.defineProperty的属性较少，Proxy对数据劫持对handler方法较多，但两者都有最基础的get和set，可以将Proxy看成是Object.defineProperty的加强版</li>
+<li>Object.defineProperty与Proxy的缺点<br>1、Object.defineProperty无法监听到数组的长度变化<br>2、Object.defineProperty由于只能劫持对象的属性，对于复杂对象需要对每个属性进行深度遍历<br>3、Object.defineProperty由于只能劫持对象的属性，对象属性有新增时，需要将对象的所有属性都进行遍历进行监听<br>4、Proxy存在浏览器兼容性问题</li>
+<li>Object.defineProperty在Vue和MobX中造成的问题和解决办法<br>1、Vue通过重写数据的七个方法，MobX通过提前将类数组声明为长度999，避免无法监听数组长度的问题<br>2、Vue和MobX都是用遍历的方式来监听深层对象属性和新增的属性</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/02/Git-Flow%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83/" rel="next" title="Git Flow使用规范">
+                <i class="fa fa-chevron-left"></i> Git Flow使用规范
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/07/10/%E4%BC%98%E9%9B%85%E7%9A%84js%EF%BC%8C%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" rel="prev" title="优雅的js，持续更新">
+                优雅的js，持续更新 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Piers Zhang</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/pierszhang" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="1159380697@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#本文介绍了什么"><span class="nav-number">1.</span> <span class="nav-text">本文介绍了什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Object-defineProperty与Proxy的使用"><span class="nav-number">2.</span> <span class="nav-text">Object.defineProperty与Proxy的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Object-defineProperty"><span class="nav-number">2.1.</span> <span class="nav-text">Object.defineProperty</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Proxy"><span class="nav-number">2.2.</span> <span class="nav-text">Proxy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">2.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Object-defineProperty与Proxy的缺点"><span class="nav-number">3.</span> <span class="nav-text">Object.defineProperty与Proxy的缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Object-defineProperty的缺点"><span class="nav-number">3.1.</span> <span class="nav-text">Object.defineProperty的缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Proxy的缺点"><span class="nav-number">3.2.</span> <span class="nav-text">Proxy的缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结-1"><span class="nav-number">3.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Object-defineProperty在Vue和MobX中造成的问题"><span class="nav-number">4.</span> <span class="nav-text">Object.defineProperty在Vue和MobX中造成的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#无法监听数组长度属性变化的问题"><span class="nav-number">4.1.</span> <span class="nav-text">无法监听数组长度属性变化的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#需要对对象的深层属性或者新增属性进行遍历，达到监听的目的"><span class="nav-number">4.2.</span> <span class="nav-text">需要对对象的深层属性或者新增属性进行遍历，达到监听的目的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Piers Zhang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
