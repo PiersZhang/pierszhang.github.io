@@ -96,5 +96,5 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repository: https://github.com/pierszhang/pierszhang.github.io.git
+  repo: git@github.com:PiersZhang/pierszhang.github.io.git
   branch: master

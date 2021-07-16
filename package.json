@@ -9,7 +9,7 @@
     "deploy": "hexo clean & hexo g & hexo d"
   },
   "hexo": {
-    "version": "4.0.0"
+    "version": "4.2.1"
   },
   "dependencies": {
     "hexo": "^4.0.0",
@@ -25,6 +25,7 @@
     "hexo-server": "^1.0.0"
   },
   "devDependencies": {
-    "hexo-tag-aplayer": "^3.0.4"
+    "hexo-tag-aplayer": "^3.0.4",
+    "hexo-util": "^2.5.0"
   }
 }
